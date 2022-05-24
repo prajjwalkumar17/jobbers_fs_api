@@ -58,3 +58,5 @@ const schema = new mongoose.Schema({
   },
   Perks: String,
 });
+const JobsModel = mongoose.model('Jobs', schema);
+module.exports = JobsModel;

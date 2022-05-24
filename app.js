@@ -6,6 +6,7 @@ const jobRouter = require('./Routers/jobRouter.js');
 const authRouter = require('./Routers/authRouter');
 const app = express();
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
+app.use(express.json({ limit: '10kb' }));
 app.use('/api/v1/jobs', jobRouter);
 app.use('/api/v1/auth', authRouter);
 
