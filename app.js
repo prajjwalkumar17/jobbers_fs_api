@@ -3,12 +3,12 @@ const morgan = require('morgan');
 const AppError = require('./Utils/appError');
 const GlobalAppError = require('./Utils//errorController');
 const jobRouter = require('./Routers/jobRouter.js');
-const authRouter = require('./Routers/authRouter');
+const userRouter = require('./Routers/userRouter');
 const app = express();
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 app.use(express.json({ limit: '10kb' }));
 app.use('/api/v1/jobs', jobRouter);
-app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/auth', userRouter);
 
 app.use('*', (req, res, next) => {
   next(
