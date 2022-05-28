@@ -4,6 +4,7 @@ const schema = new mongoose.Schema({
     type: String,
     required: [true, 'A job must have a name'],
     trim: true,
+    immutable: [false, "A company name can't change"],
   },
   About_company: String,
   Job_role: {
@@ -19,6 +20,7 @@ const schema = new mongoose.Schema({
     type: String,
     default: 'flexible',
   },
+  Posted_by: String,
   Application_deadline: {
     type: Date,
     required: [true, 'A deadline must be there'],
