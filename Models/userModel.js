@@ -40,14 +40,12 @@ const userSchema = new mongoose.Schema({
     select: false,
   },
 });
-userSchema.pre(
-  'save',
-  catchAsync(async (next) => {
-    if (!this.isModified('Password')) return next();
-    this.Password = await bcrypt.hash(this.Password, 12);
-    this.Password_confirm = undefined;
-    next();
-  })
-);
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('Password')) return next();
+  this.Password = await bcrypt.hash(this.Password, 12);
+  this.Password_confirm = undefined;
+  next();
+});
+
 const userModel = new mongoose.model('Users', userSchema);
 module.exports = userModel;
