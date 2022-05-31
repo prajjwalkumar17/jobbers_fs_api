@@ -16,13 +16,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'A min of 8 length password is required for sisgnUp'],
     minlength: 8,
+    select: false,
   },
   Photo: {
     type: String,
   },
   Role: {
     type: String,
-    enum: ['Recruiter', 'Job-Seeker'],
+    enum: ['Recruiter', 'User', 'Admin'],
     required: [true, 'A person must be a Recruiter or a Job-seeker'],
   },
   Password_confirm: {
@@ -46,6 +47,16 @@ userSchema.pre('save', async function (next) {
   this.Password_confirm = undefined;
   next();
 });
+userSchema.pre('/^find/', function (next) {
+  this.find({ active: { $ne: false } });
+  next();
+});
+userSchema.methods.loginPasswordChecker = async function (
+  enteredPassword,
+  passwordinDb
+) {
+  return await bcrypt.compare(enteredPassword, passwordinDb);
+};
 
 const userModel = new mongoose.model('Users', userSchema);
 module.exports = userModel;
