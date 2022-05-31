@@ -34,7 +34,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   if (oldUser)
     return next(new AppError('User already exists proceed for login', 409));
   const newUser = await userModel.create(req.body);
-  CreateAndSendToken(newUser, 201, res);
+  return CreateAndSendToken(newUser, 201, res);
 });
 exports.login = catchAsync(async (req, res, next) => {
   const { Email, Password } = req.body;
@@ -49,5 +49,5 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect user or Password', 400));
   }
   //TODO if all true then send jwt
-  CreateAndSendToken(user, 200, res);
+  return CreateAndSendToken(user, 200, res);
 });
