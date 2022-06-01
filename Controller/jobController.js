@@ -25,15 +25,4 @@ exports.getOneJob = catchAsync(async (req, res) => {
   });
 });
 exports.deleteOneJob = handler.deleteOne(jobModel);
-exports.updateOneJob = catchAsync(async (req, res) => {
-  const updatedJob = await jobModel.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  return res.status(201).json({
-    status: 'sucess',
-    data: {
-      updatedJob,
-    },
-  });
-});
+exports.updateOneJob = handler.updateOne(jobModel);

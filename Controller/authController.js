@@ -2,15 +2,7 @@ const catchAsync = require('./../Utils/catchAsync');
 const userModel = require('./../Models/userModel');
 const jwt = require('jsonwebtoken');
 const AppError = require('./../Utils/appError');
-exports.getAllUsers = catchAsync(async (req, res) => {
-  const users = await userModel.find();
-  res.status(200).json({
-    results: users.length,
-    data: {
-      users,
-    },
-  });
-});
+
 const TokenSigner = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
     expiresIn: process.env.EXPIRES_IN,
