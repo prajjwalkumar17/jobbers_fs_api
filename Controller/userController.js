@@ -1,5 +1,6 @@
 const userModel = require('../Models/userModel');
 const catchAsync = require('../Utils/catchAsync');
+const handler = require('./../Controller/handler');
 
 exports.getAllUsers = catchAsync(async (req, res) => {
   const users = await userModel.find();
@@ -10,3 +11,4 @@ exports.getAllUsers = catchAsync(async (req, res) => {
     },
   });
 });
+exports.getAUser = handler.getOne(userModel);
