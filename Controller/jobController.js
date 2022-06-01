@@ -1,5 +1,6 @@
 const catchAsync = require('./../Utils/catchAsync');
 const jobModel = require('./../Models/jobModel');
+const handler = require('./../Controller/handler');
 exports.getAllJobs = catchAsync(async (req, res) => {
   const allJobs = await jobModel.find();
   return res.status(200).json({
@@ -23,13 +24,7 @@ exports.getOneJob = catchAsync(async (req, res) => {
     data: { data },
   });
 });
-exports.deleteOneJob = catchAsync(async (req, res) => {
-  await jobModel.findByIdAndDelete(req.params.id);
-  return res.status(201).json({
-    status: 'sucess',
-    data: {},
-  });
-});
+exports.deleteOneJob = handler.deleteOne(jobModel);
 exports.updateOneJob = catchAsync(async (req, res) => {
   const updatedJob = await jobModel.findByIdAndUpdate(req.params.id, req.body, {
     new: true,

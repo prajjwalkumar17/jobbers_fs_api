@@ -1,11 +1,17 @@
 const express = require('express');
 const jobController = require('./../Controller/jobController');
+const apiFeatures = require('./../Utils/apiFeatures');
 
 const router = express.Router();
+
 router.route('/').get(jobController.getAllJobs).post(jobController.postJobs);
 router
   .route('/:id')
-  .get(jobController.getOneJob)
+  .get(
+    apiFeatures.protect,
+    apiFeatures.restrictTo('Admin'),
+    jobController.getOneJob
+  )
   .delete(jobController.deleteOneJob)
   .patch(jobController.updateOneJob);
 module.exports = router;
