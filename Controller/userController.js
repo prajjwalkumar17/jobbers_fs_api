@@ -12,7 +12,6 @@ exports.getAllUsers = catchAsync(async (req, res) => {
     },
   });
 });
-exports.getAUser = handler.getOne(userModel);
 exports.createUser = (req, res, next) => {
   return next(new AppError("This route isn't defined login can be used", 500));
 };
@@ -29,3 +28,6 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     })
   );
 });
+exports.getAUser = handler.getOne(userModel);
+exports.deleteAUser = handler.deleteOne(userModel);
+exports.updateAUser = handler.updateOne(userModel);
