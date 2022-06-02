@@ -12,5 +12,9 @@ router.get(
 );
 router.delete('/deleteMe', apiFeatures.protect, userController.deleteMe);
 router.post('/', userController.createUser);
-router.get('/:id', userController.getAUser);
+router
+  .route('/:id')
+  .get(userController.getAUser)
+  .delete(userController.deleteAUser)
+  .patch(userController.updateAUser);
 module.exports = router;
