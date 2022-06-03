@@ -4,7 +4,15 @@ const apiFeatures = require('./../Utils/apiFeatures');
 
 const router = express.Router();
 
-router.route('/').get(jobController.getAllJobs).post(jobController.postJobs);
+router
+  .route('/')
+  .get(jobController.getAllJobs)
+  .post(
+    apiFeatures.protect,
+    apiFeatures.restrictTo('Admin'),
+    jobController.postJobs
+  );
+
 router
   .route('/:id')
   .get(
