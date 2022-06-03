@@ -3,8 +3,13 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const catchAsync = require('../Utils/catchAsync');
+const jobModel = require('./../Models/jobModel');
 
 const userSchema = new mongoose.Schema({
+  Name: {
+    type: String,
+    Required: [true, 'A candidate must have a name'],
+  },
   Email: {
     type: String,
     trim: true,
@@ -40,11 +45,19 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false,
   },
+  Jobs_applied: Array,
 });
 userSchema.pre('save', async function (next) {
   if (!this.isModified('Password')) return next();
   this.Password = await bcrypt.hash(this.Password, 12);
   this.Password_confirm = undefined;
+  next();
+});
+userSchema.pre('save', async function (next) {
+  const jobsPromises = this.Jobs_applied.map(
+    async (id) => await jobModel.findById(id)
+  );
+  this.Jobs_applied = await Promise.all(jobsPromises);
   next();
 });
 userSchema.pre(/^find/, function (next) {
