@@ -45,7 +45,13 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false,
   },
-  Jobs_applied: Array,
+  Jobs_applied: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Jobs',
+    },
+  ],
+  // Jobs_applied: Array,
 });
 userSchema.pre('save', async function (next) {
   if (!this.isModified('Password')) return next();
@@ -53,11 +59,19 @@ userSchema.pre('save', async function (next) {
   this.Password_confirm = undefined;
   next();
 });
-userSchema.pre('save', async function (next) {
-  const jobsPromises = this.Jobs_applied.map(
-    async (id) => await jobModel.findById(id)
-  );
-  this.Jobs_applied = await Promise.all(jobsPromises);
+//TODO Embedding
+// userSchema.pre('save', async function (next) {
+//   const jobsPromises = this.Jobs_applied.map(
+//     async (id) => await jobModel.findById(id)
+//   );
+//   this.Jobs_applied = await Promise.all(jobsPromises);
+//   next();
+// });
+//TODO Referencong
+userSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'Jobs_applied',
+  });
   next();
 });
 userSchema.pre(/^find/, function (next) {
