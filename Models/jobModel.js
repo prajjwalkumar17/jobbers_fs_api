@@ -65,5 +65,10 @@ const schema = new mongoose.Schema({
   },
   Perks: String,
 });
+schema.virtual('Users_applied', {
+  ref: 'Users',
+  localField: '_id',
+  foreignField: 'Jobs_applied',
+});
 const JobsModel = mongoose.model('Jobs', schema);
 module.exports = JobsModel;
