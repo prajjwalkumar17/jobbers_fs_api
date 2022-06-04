@@ -1,9 +1,11 @@
 const express = require('express');
 const jobController = require('./../Controller/jobController');
 const apiFeatures = require('./../Utils/apiFeatures');
+const jobApplicationRouter = require('./../Routers/jobApplicationRouter');
 
 const router = express.Router();
 
+router.use('/apply/:jobId', jobApplicationRouter);
 router
   .route('/')
   .get(jobController.getAllJobs)

@@ -49,6 +49,7 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.ObjectId,
       ref: 'Jobs',
+      unique: [true, 'Already Applied to this job'],
     },
   ],
   // Jobs_applied: Array,
