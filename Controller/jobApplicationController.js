@@ -1,3 +1,4 @@
+const JobsModel = require('../Models/jobModel');
 const userModel = require('../Models/userModel');
 const AppError = require('../Utils/appError');
 const catchAsync = require('../Utils/catchAsync');
@@ -23,6 +24,9 @@ exports.Jobapply = catchAsync(async (req, res, next) => {
       new: true,
     }
   );
+  await JobsModel.findByIdAndUpdate(req.params.jobId, {
+    $inc: { Total_Applicants: 1 },
+  });
   return res.status(200).json({
     status: 'sucess',
     data: {
@@ -38,6 +42,33 @@ exports.getJobPostings = catchAsync(async (req, res) => {
     results: jobsCreated.length,
     Jobs_created: {
       jobsCreated,
+    },
+  });
+});
+exports.getAppliedUsers = catchAsync(async (req, res) => {
+  const data = await JobsModel.findById(req.params.jobId).populate(
+    'Users_applied',
+    ['-Role', '-__v']
+  );
+  //BUG don't want the Jobs_applied in output
+  const usersApplied = data.Users_applied;
+  usersApplied.forEach((el) => delete el.Jobs_applied);
+  // console.log(usersApplied);
+  res.status(300).json({
+    status: 'Sucessfull',
+    results: usersApplied.length,
+    data: {
+      usersApplied,
+    },
+  });
+});
+exports.getMyAppliedJobs = catchAsync(async (req, res) => {
+  const jobsApplied = req.user.Jobs_applied;
+  res.status(300).json({
+    status: 'Sucessfull',
+    results: jobsApplied.length,
+    data: {
+      jobsApplied,
     },
   });
 });

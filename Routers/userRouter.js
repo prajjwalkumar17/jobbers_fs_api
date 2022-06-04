@@ -11,6 +11,20 @@ router
     apiFeatures.restrictTo('Recruiter'),
     jobApplicationController.getJobPostings
   );
+router
+  .route('/appliedJobs')
+  .get(
+    apiFeatures.protect,
+    apiFeatures.restrictTo('User'),
+    jobApplicationController.getMyAppliedJobs
+  );
+router
+  .route('/postings/:jobId')
+  .get(
+    apiFeatures.protect,
+    apiFeatures.restrictTo('Recruiter'),
+    jobApplicationController.getAppliedUsers
+  );
 router.get('/', userController.getAllUsers);
 router.get(
   '/me',
