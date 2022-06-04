@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const catchAsync = require('../Utils/catchAsync');
 const schema = new mongoose.Schema({
   Company_name: {
     type: String,
@@ -20,7 +21,11 @@ const schema = new mongoose.Schema({
     type: String,
     default: 'flexible',
   },
-  Posted_by: String,
+  Posted_by: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Users',
+    required: [true, 'Posted By should be there'],
+  },
   Application_deadline: {
     type: Date,
     required: [true, 'A deadline must be there'],

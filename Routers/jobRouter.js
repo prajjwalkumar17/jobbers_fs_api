@@ -1,10 +1,20 @@
 const express = require('express');
 const jobController = require('./../Controller/jobController');
 const apiFeatures = require('./../Utils/apiFeatures');
+const jobApplicationRouter = require('./../Routers/jobApplicationRouter');
 
 const router = express.Router();
 
-router.route('/').get(jobController.getAllJobs).post(jobController.postJobs);
+router.use('/apply/:jobId', jobApplicationRouter);
+router
+  .route('/')
+  .get(jobController.getAllJobs)
+  .post(
+    apiFeatures.protect,
+    apiFeatures.restrictTo('Recruiter', 'Admin'),
+    jobController.postJobs
+  );
+
 router
   .route('/:id')
   .get(

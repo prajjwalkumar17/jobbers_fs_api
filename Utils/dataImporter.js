@@ -27,7 +27,7 @@ mongoose.connect(
 
 //TODO Import data to db
 const importData = catchAsync(async () => {
-  await jobModel.create(jobToAdd, { validateBeforeSave: false });
+  await jobModel.create(jobToAdd, { validateBeforeSave: true });
   console.log('data added successfully');
   process.exit();
 });
@@ -42,3 +42,4 @@ const deleteData = catchAsync(async () => {
 if (process.argv[2] == '--import') importData();
 else if (process.argv[2] == '--delete') deleteData();
 console.log(process.argv);
+//  node Utils/dataImporter.js --delete

@@ -10,6 +10,7 @@ exports.getAllJobs = catchAsync(async (req, res) => {
   });
 });
 exports.postJobs = catchAsync(async (req, res) => {
+  req.body.Posted_by = req.user.id;
   const newCreatedJob = await jobModel.create(req.body);
   return res.status(201).json({
     status: 'sucess',

@@ -2,7 +2,15 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../Controller/userController');
 const apiFeatures = require('../Utils/apiFeatures');
+const jobApplicationController = require('./../Controller/jobApplicationController');
 
+router
+  .route('/postings')
+  .get(
+    apiFeatures.protect,
+    apiFeatures.restrictTo('Recruiter'),
+    jobApplicationController.getJobPosting
+  );
 router.get('/', userController.getAllUsers);
 router.get(
   '/me',
