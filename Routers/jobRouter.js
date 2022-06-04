@@ -11,7 +11,7 @@ router
   .get(jobController.getAllJobs)
   .post(
     apiFeatures.protect,
-    apiFeatures.restrictTo('Admin'),
+    apiFeatures.restrictTo('Recruiter', 'Admin'),
     jobController.postJobs
   );
 

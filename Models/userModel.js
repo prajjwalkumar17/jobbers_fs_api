@@ -2,8 +2,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
-const catchAsync = require('../Utils/catchAsync');
-const jobModel = require('./../Models/jobModel');
 
 const userSchema = new mongoose.Schema({
   Name: {
@@ -53,6 +51,12 @@ const userSchema = new mongoose.Schema({
     },
   ],
   // Jobs_applied: Array,
+});
+//TODO virtual populate to get parent from the parent referencing
+userSchema.virtual('Jobs_created', {
+  ref: 'Jobs',
+  foreignField: 'Posted_by',
+  localField: '_id',
 });
 userSchema.pre('save', async function (next) {
   if (!this.isModified('Password')) return next();

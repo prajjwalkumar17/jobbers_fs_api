@@ -21,7 +21,11 @@ const schema = new mongoose.Schema({
     type: String,
     default: 'flexible',
   },
-  Posted_by: mongoose.Schema.ObjectId,
+  Posted_by: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Users',
+    required: [true, 'Posted By should be there'],
+  },
   Application_deadline: {
     type: Date,
     required: [true, 'A deadline must be there'],
