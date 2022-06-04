@@ -1,5 +1,3 @@
-///:userIdapply/:jobId
-
 const express = require('express');
 const apiFeatures = require('./../Utils/apiFeatures');
 const jobApplicationController = require('./../Controller/jobApplicationController');
