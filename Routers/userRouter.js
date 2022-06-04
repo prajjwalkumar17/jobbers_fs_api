@@ -9,7 +9,7 @@ router
   .get(
     apiFeatures.protect,
     apiFeatures.restrictTo('Recruiter'),
-    jobApplicationController.getJobPosting
+    jobApplicationController.getJobPostings
   );
 router.get('/', userController.getAllUsers);
 router.get(

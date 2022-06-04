@@ -30,7 +30,7 @@ exports.Jobapply = catchAsync(async (req, res, next) => {
     },
   });
 });
-exports.getJobPosting = catchAsync(async (req, res) => {
+exports.getJobPostings = catchAsync(async (req, res) => {
   const data = await userModel.findById(req.user.id).populate('Jobs_created');
   const jobsCreated = data.Jobs_created;
   return res.status(200).json({
