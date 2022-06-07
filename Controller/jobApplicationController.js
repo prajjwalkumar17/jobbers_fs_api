@@ -48,7 +48,8 @@ exports.getJobPostings = catchAsync(async (req, res) => {
 exports.getAppliedUsers = catchAsync(async (req, res) => {
   const data = await JobsModel.findById(req.params.jobId).populate(
     'Users_applied',
-    ['-Role', '-__v']
+    // ['Role', '__v']
+    ['-Jobs_applied']
   );
   //BUG don't want the Jobs_applied in output
   const usersApplied = data.Users_applied;
