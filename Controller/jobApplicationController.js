@@ -45,7 +45,7 @@ exports.getJobPostings = catchAsync(async (req, res) => {
     },
   });
 });
-exports.getAppliedUsers = catchAsync(async (req, res) => {
+exports.getAppliedUsers = catchAsync(async (req, res, next) => {
   const data = await JobsModel.findById(req.params.jobId).populate(
     'Users_applied',
     // ['Role', '__v']
@@ -55,13 +55,18 @@ exports.getAppliedUsers = catchAsync(async (req, res) => {
   const usersApplied = data.Users_applied;
   usersApplied.forEach((el) => delete el.Jobs_applied);
   // console.log(usersApplied);
-  res.status(300).json({
-    status: 'Sucessfull',
-    results: usersApplied.length,
-    data: {
-      usersApplied,
-    },
-  });
+  if (usersApplied.length !== 0) {
+    return res.status(300).json({
+      status: 'Sucessfull',
+      results: usersApplied.length,
+      data: {
+        usersApplied,
+      },
+    });
+  } else
+    return next(
+      new AppError('No users applied yet we are waiting for applications', 404)
+    );
 });
 exports.getMyAppliedJobs = catchAsync(async (req, res) => {
   const jobsApplied = req.user.Jobs_applied;
