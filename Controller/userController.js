@@ -27,24 +27,107 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     })
   );
 });
+
 //TODO photo Upload
 const multer = require('multer');
-const uploadResources = multer({ dest: 'Uploads/ProfilePics' });
-exports.uploads = uploadResources.single('Photo');
-//TODO merge
-// const resumeupload = multer({ dest: 'Uploads/Resumes' });
-// exports.uploadResume = resumeupload.single('Resume');
-
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    if (file.fieldname === 'Photo') {
+      cb(null, 'Uploads/ProfilePics');
+    } else if (file.fieldname === 'Resume') {
+      cb(null, 'Uploads/Resumes');
+    }
+  },
+  filename: (req, file, cb) => {
+    if (file.fieldname === 'Resume') {
+      const ext = file.mimetype.split('/')[1];
+      cb(null, `user-Resume-${req.user.id}-${Date.now()}.${ext}`);
+    } else if (file.fieldname === 'Photo') {
+      const ext = file.mimetype.split('/')[1];
+      cb(null, `user-ProfilePic-${req.user.id}-${Date.now()}.${ext}`);
+    }
+  },
+});
+const multerFilter = (req, file, cb) => {
+  if (file.fieldname === 'Resume') {
+    if (
+      file.mimetype === 'application/pdf' ||
+      file.mimetype === 'application/msword' ||
+      file.mimetype ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ) {
+      // check file type to be pdf, doc, or docx
+      cb(null, true);
+    } else {
+      cb('Should only select a PDF,doc or docx file', false); // else fails
+    }
+  } else if (file.fieldname === 'Photo') {
+    if (
+      file.mimetype === 'image/png' ||
+      file.mimetype === 'image/jpg' ||
+      file.mimetype === 'image/jpeg'
+    ) {
+      // check file type to be png, jpeg, or jpg
+      cb(null, true);
+    } else {
+      cb('Select only a png, jpg or a jpeg pic', false); // else fails
+    }
+  }
+};
+const uploadResources = multer({
+  storage: multerStorage,
+  // limits: {
+  //   fileSize: 1048576,
+  // },
+  fileFilter: multerFilter,
+});
+exports.uploads = uploadResources.fields([
+  {
+    name: 'Photo',
+    maxCount: 1,
+  },
+  {
+    name: 'Resume',
+    maxCount: 1,
+  },
+]);
+const filterOut = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach((el) => {
+    if (allowedFields.includes(el)) newObj[el] = obj[el];
+  });
+  return newObj;
+};
 exports.updateMe = catchAsync(async (req, res, next) => {
-  // console.log(req.file);
-  // console.log(req.body);
-  //BUG not doin anything
-  return next(
-    res.status(200).json({
-      status: 'sucess',
-      message: `The user is sucessfully updated`,
-    })
+  //TODO create error if password is added in body
+  if (req.body.Password || req.body.Password_confirm)
+    return next(new AppError('This route is not for updating password', 400));
+
+  //TODO create filter body
+  const filteredBody = filterOut(req.body, 'Name', 'Email');
+  //BUG file not coming here
+  console.log(req.file);
+  if (req.file.fieldname === 'Photo')
+    filteredBody.Photo = req.body.file.find((file) => {
+      return file.fieldname === 'Photo';
+    }).filename;
+  if (req.file.fieldname === 'Resume')
+    filteredBody.Resume = req.body.file.find((file) => {
+      return file.fieldname === 'Reusme';
+    }).filename;
+
+  const updatedMe = await userModel.findByIdAndUpdate(
+    req.user.id,
+    filteredBody,
+    {
+      new: true,
+    }
   );
+  return res.status(200).json({
+    status: 'sucess',
+    message: `The user is sucessfully updated`,
+    updatedMe,
+  });
 });
 exports.getAUser = handler.getOne(userModel);
 exports.deleteAUser = handler.deleteOne(userModel);
