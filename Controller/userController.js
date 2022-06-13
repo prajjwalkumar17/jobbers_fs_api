@@ -41,10 +41,16 @@ const multerStorage = multer.diskStorage({
   filename: (req, file, cb) => {
     if (file.fieldname === 'Resume') {
       const ext = file.mimetype.split('/')[1];
-      cb(null, `user-Resume-${req.user.id}-${Date.now()}.${ext}`);
+      req.resume = file;
+      const resname = `user-Resume-${req.user.id}-${Date.now()}.${ext}`;
+      req.resume.modifiedname = resname;
+      cb(null, resname);
     } else if (file.fieldname === 'Photo') {
+      req.dp = file;
       const ext = file.mimetype.split('/')[1];
-      cb(null, `user-ProfilePic-${req.user.id}-${Date.now()}.${ext}`);
+      const dpname = `user-ProfilePic-${req.user.id}-${Date.now()}.${ext}`;
+      req.dp.modifiedname = dpname;
+      cb(null, dpname);
     }
   },
 });
@@ -105,16 +111,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   //TODO create filter body
   const filteredBody = filterOut(req.body, 'Name', 'Email');
-  //BUG file not coming here
-  console.log(req.file);
-  if (req.file.fieldname === 'Photo')
-    filteredBody.Photo = req.body.file.find((file) => {
-      return file.fieldname === 'Photo';
-    }).filename;
-  if (req.file.fieldname === 'Resume')
-    filteredBody.Resume = req.body.file.find((file) => {
-      return file.fieldname === 'Reusme';
-    }).filename;
+  if (req.resume) filteredBody.Resume = req.dp.modifiedname;
+  if (req.dp) filteredBody.Photo = req.resume.modifiedname;
 
   const updatedMe = await userModel.findByIdAndUpdate(
     req.user.id,
