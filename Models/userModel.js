@@ -24,6 +24,9 @@ const userSchema = new mongoose.Schema({
   Photo: {
     type: String,
   },
+  Resume: {
+    type: String,
+  },
   Role: {
     type: String,
     enum: ['Recruiter', 'User', 'Admin'],

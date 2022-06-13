@@ -36,7 +36,7 @@ router.delete('/deleteMe', apiFeatures.protect, userController.deleteMe);
 router.patch(
   '/updateMe',
   apiFeatures.protect,
-  userController.uploadProfilePic,
+  // userController.uploads,
   userController.updateMe
 );
 router.post('/', userController.createUser);
