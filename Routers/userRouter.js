@@ -33,10 +33,14 @@ router.get(
   userController.getAUser
 );
 router.delete('/deleteMe', apiFeatures.protect, userController.deleteMe);
+
+// const multer = require('multer');
+// const upload = multer({ dest: 'Uploads/ProfilePics' });
+
 router.patch(
   '/updateMe',
   apiFeatures.protect,
-  // userController.uploads,
+  userController.uploads,
   userController.updateMe
 );
 router.post('/', userController.createUser);
