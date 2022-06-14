@@ -11,7 +11,7 @@ exports.getAllUsers = catchAsync(async (req, res) => {
     },
   });
 });
-exports.createUser = (req, res, next) => {
+exports.createUser = (_, __, next) => {
   return next(new AppError("This route isn't defined login can be used", 500));
 };
 exports.getMe = catchAsync(async (req, res, next) => {
@@ -111,8 +111,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   //TODO create filter body
   const filteredBody = filterOut(req.body, 'Name', 'Email');
-  if (req.resume) filteredBody.Resume = req.dp.modifiedname;
-  if (req.dp) filteredBody.Photo = req.resume.modifiedname;
+  if (req.dp) filteredBody.Resume = req.dp.modifiedname;
+  if (req.resume) filteredBody.Photo = req.resume.modifiedname;
 
   const updatedMe = await userModel.findByIdAndUpdate(
     req.user.id,
