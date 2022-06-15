@@ -2,6 +2,7 @@ const catchAsync = require('./../Utils/catchAsync');
 const userModel = require('./../Models/userModel');
 const jwt = require('jsonwebtoken');
 const AppError = require('./../Utils/appError');
+const EmailSend = require('./../Utils/email');
 
 const TokenSigner = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
@@ -26,6 +27,8 @@ exports.signup = catchAsync(async (req, res, next) => {
   if (oldUser)
     return next(new AppError('User already exists proceed for login', 409));
   const newUser = await userModel.create(req.body);
+  const url = '#';
+  await new EmailSend(newUser, url).sendWelcome();
   return CreateAndSendToken(newUser, 201, res);
 });
 exports.login = catchAsync(async (req, res, next) => {

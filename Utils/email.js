@@ -1,14 +1,15 @@
 const nodemailer = require('nodemailer');
 const pug = require('pug');
+const html2text = require('html-to-text');
 
-module.exports = class Email {
+module.exports = class EmailSend {
   constructor(user, url) {
     this.to = user.Email;
     this.firstName = user.Name.split(' ')[0];
     this.url = url;
     this.from = process.env.Email;
   }
-  createTransport() {
+  newTransport() {
     if (process.env.NODE_ENV === 'production') {
       //send grid
       return 1;
@@ -22,12 +23,28 @@ module.exports = class Email {
       },
     });
   }
-  send(template, subject) {
+  async send(template, subject) {
     //1)render pug
+    const html = pug.renderFile(
+      `${__dirname}/../Views/Emails/${template}.pug`,
+      {
+        firstName: this.firstName,
+        url: this.url,
+        subject,
+      }
+    );
     //2)define email options
+    const mailOptions = {
+      from: this.from,
+      to: this.to,
+      subject,
+      html,
+      text: html2text.fromString(html),
+    };
     //3)Create and send emails
+    await this.newTransport().sendMail(mailOptions);
   }
-  sendWelcome() {
-    this.send('Welcome', 'Welcome to Jobbers Platform!');
+  async sendWelcome() {
+    await this.send('Welcome', 'Welcome to Jobbers Platform!');
   }
 };
