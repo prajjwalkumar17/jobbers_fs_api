@@ -32,11 +32,7 @@ const userSchema = new mongoose.Schema({
     enum: ['Recruiter', 'User', 'Admin'],
     required: [true, 'A person must be a Recruiter or a Job-seeker'],
   },
-  Skills: [
-    {
-      type: String,
-    },
-  ],
+  Skills: { type: Array, default: [] },
   Password_confirm: {
     type: String,
     validate: {

@@ -105,8 +105,9 @@ const filterOut = (obj, ...allowedFields) => {
   return newObj;
 };
 exports.updateMe = catchAsync(async (req, res, next) => {
-  console.log(req.cv);
+  // console.log(req.cv);
   //TODO create error if password is added in body
+  console.log(req.body.Skills);
   if (req.body.Password || req.body.Password_confirm)
     return next(new AppError('This route is not for updating password', 400));
 
@@ -114,6 +115,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   const filteredBody = filterOut(req.body, 'Name', 'Email');
   if (req.cv) filteredBody.Resume = req.cv.modifiedname;
   if (req.dp) filteredBody.Photo = req.dp.modifiedname;
+  if (req.body.Skills) filteredBody.Skills = req.body.Skills;
 
   const updatedMe = await userModel.findByIdAndUpdate(
     req.user.id,
