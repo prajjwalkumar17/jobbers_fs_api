@@ -48,13 +48,13 @@ exports.getJobPostings = catchAsync(async (req, res) => {
 exports.getAppliedUsers = catchAsync(async (req, res, next) => {
   const data = await JobsModel.findById(req.params.jobId).populate(
     'Users_applied',
-    // ['Role', '__v']
-    ['-Jobs_applied']
+    ['-Role', '-__v']
+    // ['-Jobs_applied']
   );
   //BUG don't want the Jobs_applied in output
   const usersApplied = data.Users_applied;
   usersApplied.forEach((el) => delete el.Jobs_applied);
-  // console.log(usersApplied);
+  console.log(usersApplied);
   if (usersApplied.length !== 0) {
     return res.status(300).json({
       status: 'Sucessfull',
