@@ -40,10 +40,10 @@ const multerStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     if (file.fieldname === 'Resume') {
+      req.cv = file;
       const ext = file.mimetype.split('/')[1];
-      req.resume = file;
       const resname = `user-Resume-${req.user.id}-${Date.now()}.${ext}`;
-      req.resume.modifiedname = resname;
+      req.cv.modifiedname = resname;
       cb(null, resname);
     } else if (file.fieldname === 'Photo') {
       req.dp = file;
@@ -105,14 +105,15 @@ const filterOut = (obj, ...allowedFields) => {
   return newObj;
 };
 exports.updateMe = catchAsync(async (req, res, next) => {
+  console.log(req.cv);
   //TODO create error if password is added in body
   if (req.body.Password || req.body.Password_confirm)
     return next(new AppError('This route is not for updating password', 400));
 
   //TODO create filter body
   const filteredBody = filterOut(req.body, 'Name', 'Email');
-  if (req.dp) filteredBody.Resume = req.dp.modifiedname;
-  if (req.resume) filteredBody.Photo = req.resume.modifiedname;
+  if (req.cv) filteredBody.Resume = req.cv.modifiedname;
+  if (req.dp) filteredBody.Photo = req.dp.modifiedname;
 
   const updatedMe = await userModel.findByIdAndUpdate(
     req.user.id,
