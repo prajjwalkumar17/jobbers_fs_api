@@ -12,7 +12,14 @@ module.exports = class EmailSend {
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
       //send grid
-      return 1;
+      return nodemailer.createTransport({
+        host: process.env.SENDINBLUE_DOMAIN,
+        port: process.env.SENDINBLUE_PORT,
+        auth: {
+          user: process.env.SENDINBLUE_USERNAME,
+          pass: process.env.SENDINBLUE_PASS,
+        },
+      });
     }
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
