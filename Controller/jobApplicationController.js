@@ -78,3 +78,36 @@ exports.getMyAppliedJobs = catchAsync(async (req, res) => {
     },
   });
 });
+exports.bookmarkAJob = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+  const jobToBookmark = req.params.jobid;
+  let alreadyBookmarked = [];
+  req.user.Bookmarked_jobs.map((el) => {
+    alreadyBookmarked.push(
+      el._id.toString().replace(/ObjectId\("(.*)"\)/, '$1')
+    );
+  });
+  if (alreadyBookmarked.includes(jobToBookmark))
+    return next(new AppError('This job is already bookmarked', 409));
+
+  const bookMarkingUser = await userModel.findByIdAndUpdate(
+    userId,
+    {
+      $push: { Bookmarked_jobs: jobToBookmark },
+    },
+    {
+      new: true,
+    }
+  );
+  return res.status(200).json({
+    status: 'sucess',
+    data: {
+      bookMarkingUser,
+    },
+  });
+});
+exports.getMyBookmarkedJobs = catchAsync(async (req, res, next) => {
+  //BUG complete getting my bookmarked jobs
+  const bookmarkedJobs = req.user.Bookmarked_jobs;
+  console.log(bookmarkedJobs);
+});
