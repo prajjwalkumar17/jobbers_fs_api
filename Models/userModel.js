@@ -58,6 +58,13 @@ const userSchema = new mongoose.Schema({
       unique: [true, 'Already Applied to this job'],
     },
   ],
+  Bookmarked_jobs: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Jobs',
+      unique: [true, "can't bookmarked a job 2 times"],
+    },
+  ],
   Password_resetToken: String,
   Password_resetExpires: Date,
   Password_LastChangedAt: Date,
