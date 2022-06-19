@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
   Name: {
@@ -57,6 +58,9 @@ const userSchema = new mongoose.Schema({
       unique: [true, 'Already Applied to this job'],
     },
   ],
+  Password_resetToken: String,
+  Password_resetExpires: Date,
+  Password_LastChangedAt: Date,
   // Jobs_applied: Array,
 });
 //TODO virtual populate to get parent from the parent referencing
@@ -90,12 +94,35 @@ userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } });
   next();
 });
+userSchema.pre('save', function (next) {
+  //returns when password is not modified or if the doc is new
+  if (!this.isModified('Password') || this.isNew) return next();
+  this.Password_LastChangedAt = Date.now() - 1000;
+  next();
+});
 userSchema.methods.loginPasswordChecker = async function (
   enteredPassword,
   passwordinDb
 ) {
   return await bcrypt.compare(enteredPassword, passwordinDb);
 };
-
+userSchema.methods.sendPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.Password_resetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+  console.log(
+    `for verification ${resetToken} : for saving to the database ${this.Password_resetToken}`
+  );
+  this.Password_resetExpires = Date.now() + 10 * 60 * 1000;
+  return resetToken;
+};
+userSchema.methods.checkPassword = async function (
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 const userModel = new mongoose.model('Users', userSchema);
 module.exports = userModel;

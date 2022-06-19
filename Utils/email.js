@@ -21,16 +21,15 @@ module.exports = class EmailSend {
           pass: process.env.GMAIL_PASS,
         },
       });
-    } else {
-      return nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
     }
+    return nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
   }
   async send(template, subject) {
     //1)render pug
@@ -58,5 +57,15 @@ module.exports = class EmailSend {
   }
   async sendWelcome() {
     await this.send('Welcome', 'Welcome to Jobbers Platform!');
+  }
+  async sendPasswordResetToken(res) {
+    await this.send(
+      'resetPassword',
+      'Reset Password Token (Validity : 10mmins)!'
+    );
+    res.status(200).json({
+      status: 'success',
+      message: `The toke is sent :- ${this.url}`,
+    });
   }
 };
