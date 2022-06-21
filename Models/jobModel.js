@@ -70,9 +70,10 @@ schema.virtual('Users_applied', {
   localField: '_id',
   foreignField: 'Jobs_applied',
 });
-schema.pre(/^find/, function (next) {
-  this.find({ active: { $ne: false } });
-  next();
-});
+//BUG will create problem for recuiters after deadlines they can't get the applicants so implemented this in get job route
+// schema.pre(/^find/, function (next) {
+//   this.find({ active: { $ne: false } });
+//   next();
+// });
 const JobsModel = mongoose.model('Jobs', schema);
 module.exports = JobsModel;

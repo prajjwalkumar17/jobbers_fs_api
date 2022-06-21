@@ -2,7 +2,7 @@ const catchAsync = require('./../Utils/catchAsync');
 const jobModel = require('./../Models/jobModel');
 const handler = require('./../Controller/handler');
 exports.getAllJobs = catchAsync(async (req, res) => {
-  const allJobs = await jobModel.find();
+  const allJobs = await jobModel.find({ active: { $ne: false } });
   return res.status(200).json({
     status: 'sucess',
     results: allJobs.length,
