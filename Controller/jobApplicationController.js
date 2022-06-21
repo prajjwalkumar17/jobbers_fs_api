@@ -16,7 +16,7 @@ exports.Jobapply = catchAsync(async (req, res, next) => {
     return next(new AppError('Already Applied to this Job Opening', 409));
   }
   const job = await JobsModel.findById(jobId);
-  if (job.Openings_available > job.Total_Applicants) {
+  if (Date.now() < job.Application_deadline) {
     const Applyinguser = await userModel.findByIdAndUpdate(
       userId,
       {
