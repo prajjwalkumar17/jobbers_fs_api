@@ -90,13 +90,13 @@ userSchema.pre('save', async function (next) {
 //   this.Jobs_applied = await Promise.all(jobsPromises);
 //   next();
 // });
-//TODO Referencong
-userSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: 'Jobs_applied',
-  });
-  next();
-});
+//TODO Referencing
+// userSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'Jobs_applied',
+//   });
+//   next();
+// });
 userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } });
   next();
