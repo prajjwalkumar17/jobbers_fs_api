@@ -15,24 +15,31 @@ exports.Jobapply = catchAsync(async (req, res, next) => {
   if (jobsAlreadyApplied.includes(jobId)) {
     return next(new AppError('Already Applied to this Job Opening', 409));
   }
-  const Applyinguser = await userModel.findByIdAndUpdate(
-    userId,
-    {
-      $push: { Jobs_applied: jobId },
-    },
-    {
-      new: true,
-    }
-  );
-  await JobsModel.findByIdAndUpdate(req.params.jobId, {
-    $inc: { Total_Applicants: 1 },
-  });
-  return res.status(200).json({
-    status: 'sucess',
-    data: {
-      Applyinguser,
-    },
-  });
+  const job = await JobsModel.findById(jobId);
+  if (Date.now() < job.Application_deadline) {
+    const Applyinguser = await userModel.findByIdAndUpdate(
+      userId,
+      {
+        $push: { Jobs_applied: jobId },
+      },
+      {
+        new: true,
+      }
+    );
+    await JobsModel.findByIdAndUpdate(req.params.jobId, {
+      $inc: { Total_Applicants: 1 },
+    });
+    return res.status(200).json({
+      status: 'sucess',
+      data: {
+        Applyinguser,
+      },
+    });
+  } else {
+    job.active = false;
+    await job.save({ validateBeforeSave: false });
+    return next(new AppError('Applications are closed for this job', 404));
+  }
 });
 exports.getJobPostings = catchAsync(async (req, res) => {
   const data = await userModel.findById(req.user.id).populate('Jobs_created');
@@ -48,15 +55,15 @@ exports.getJobPostings = catchAsync(async (req, res) => {
 exports.getAppliedUsers = catchAsync(async (req, res, next) => {
   const data = await JobsModel.findById(req.params.jobId).populate(
     'Users_applied',
-    ['-Role', '-__v']
+    ['-Role', '-__v', '-Bookmarked_jobs']
     // ['-Jobs_applied']
   );
   //BUG don't want the Jobs_applied in output
   const usersApplied = data.Users_applied;
-  usersApplied.forEach((el) => delete el.Jobs_applied);
-  console.log(usersApplied);
+  // const result = usersApplied.map((el) => delete el.Jobs_applied);
+  // console.log(result);
   if (usersApplied.length !== 0) {
-    return res.status(300).json({
+    return res.status(200).json({
       status: 'Sucessfull',
       results: usersApplied.length,
       data: {
@@ -69,8 +76,11 @@ exports.getAppliedUsers = catchAsync(async (req, res, next) => {
     );
 });
 exports.getMyAppliedJobs = catchAsync(async (req, res) => {
-  const jobsApplied = req.user.Jobs_applied;
-  res.status(300).json({
+  const jobs = req.user.Jobs_applied;
+  const jobsPromises = jobs.map(async (el) => await JobsModel.findById(el));
+  const jobsApplied = await Promise.all(jobsPromises);
+  // console.log(jobsApplied);
+  res.status(200).json({
     status: 'Sucessfull',
     results: jobsApplied.length,
     data: {
@@ -107,7 +117,14 @@ exports.bookmarkAJob = catchAsync(async (req, res, next) => {
   });
 });
 exports.getMyBookmarkedJobs = catchAsync(async (req, res, next) => {
-  //BUG complete getting my bookmarked jobs
   const bookmarkedJobs = req.user.Bookmarked_jobs;
-  console.log(bookmarkedJobs);
+  const bookmarkPromises = bookmarkedJobs.map(
+    async (el) => await JobsModel.findById(el)
+  );
+  const bookmarks = await Promise.all(bookmarkPromises);
+  return res.status(200).json({
+    status: 'successfull',
+    results: bookmarks.length,
+    bookmarks,
+  });
 });

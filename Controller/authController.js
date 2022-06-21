@@ -77,7 +77,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   });
   //check if time isn't expired
   if (!user) {
-    return next(new AppError('Token is not valid or is laready expired', 400));
+    return next(new AppError('Token is not valid or is already expired', 400));
   }
   user.Password = req.body.Password;
   user.Password_confirm = req.body.Password_confirm;
