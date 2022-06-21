@@ -4,7 +4,8 @@
   "description": "A platform for job seekers",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
+    "dev": "nodemon Server.js",
     "test": "ndb server.js"
   },
   "author": "Rejointech",
