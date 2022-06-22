@@ -53,7 +53,7 @@ module.exports = class EmailSend {
     });
   }
   async sendWelcome() {
-    await this.send('Welcome', 'Welcome to Jobbers Platform!');
+    await this.send('welcome', 'Welcome to Jobbers Platform!');
   }
   async sendPasswordResetToken(res) {
     await this.send(
