@@ -12,6 +12,7 @@ app.use(
   '/ProfilePics',
   express.static(path.join(__dirname, 'Uploads/ProfilePics'))
 );
+//TODO get req to https://jobbers-api.herokuapp.com/Resumes/user-Resume-62ac07341713075ea590cf6f-1655441227905.pdf
 app.use('/Resumes', express.static(path.join(__dirname, 'Uploads/Resumes')));
 app.use(express.json({ limit: '10kb' }));
 app.use('/api/v1/jobs', jobRouter);
