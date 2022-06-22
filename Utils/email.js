@@ -32,7 +32,7 @@ module.exports = class EmailSend {
     });
   }
   async send(template, subject) {
-    //1)render pug
+    //1)render pug with correct dir
     const html = pug.renderFile(`${__dirname}/Views/${template}.pug`, {
       firstName: this.firstName,
       url: this.url,
