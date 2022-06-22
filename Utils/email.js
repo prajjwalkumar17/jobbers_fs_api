@@ -32,15 +32,12 @@ module.exports = class EmailSend {
     });
   }
   async send(template, subject) {
-    //1)render pug
-    const html = pug.renderFile(
-      `${__dirname}/../Views/Emails/${template}.pug`,
-      {
-        firstName: this.firstName,
-        url: this.url,
-        subject,
-      }
-    );
+    //1)render pug with correct dir
+    const html = pug.renderFile(`${__dirname}/../Views/${template}.pug`, {
+      firstName: this.firstName,
+      url: this.url,
+      subject,
+    });
     //2)define email options
     const mailOptions = {
       from: this.from,
@@ -56,7 +53,7 @@ module.exports = class EmailSend {
     });
   }
   async sendWelcome() {
-    await this.send('Welcome', 'Welcome to Jobbers Platform!');
+    await this.send('welcome', 'Welcome to Jobbers Platform!');
   }
   async sendPasswordResetToken(res) {
     await this.send(

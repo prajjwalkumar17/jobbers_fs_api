@@ -26,4 +26,5 @@ exports.getOneJob = catchAsync(async (req, res) => {
   });
 });
 exports.deleteOneJob = handler.deleteOne(jobModel);
+
 exports.updateOneJob = handler.updateOne(jobModel);
