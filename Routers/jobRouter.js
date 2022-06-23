@@ -5,7 +5,9 @@ const jobApplicationRouter = require('./../Routers/jobApplicationRouter');
 const jobApplicationController = require('./../Controller/jobApplicationController');
 
 const router = express.Router();
-
+const upload = require('multer')();
+// const upload = multer();
+router.use(upload.array());
 router.use('/apply/:jobId', jobApplicationRouter);
 router
   .route('/')
