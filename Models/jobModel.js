@@ -59,6 +59,7 @@ const schema = new mongoose.Schema({
     default: true,
     select: false,
   },
+  Featured: Boolean,
   Total_Applicants: {
     type: Number,
     default: 0,

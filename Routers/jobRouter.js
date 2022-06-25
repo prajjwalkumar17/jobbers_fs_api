@@ -17,7 +17,7 @@ router
     apiFeatures.restrictTo('Recruiter', 'Admin'),
     jobController.postJobs
   );
-
+router.route('/featured').get(jobApplicationController.getfeaturedJobs);
 router
   .route('/bookmark/:jobid')
   .post(apiFeatures.protect, jobApplicationController.bookmarkAJob);
