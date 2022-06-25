@@ -107,7 +107,7 @@ const filterOut = (obj, ...allowedFields) => {
 exports.updateMe = catchAsync(async (req, res, next) => {
   // console.log(req.cv);
   //TODO create error if password is added in body
-  console.log(req.body.Skills);
+  // console.log(req.body.Skills);
   if (req.body.Password || req.body.Password_confirm)
     return next(new AppError('This route is not for updating password', 400));
 

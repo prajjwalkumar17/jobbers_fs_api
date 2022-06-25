@@ -19,6 +19,13 @@ router
   );
 router.route('/featured').get(jobApplicationController.getfeaturedJobs);
 router
+  .route('/recommended')
+  .get(
+    apiFeatures.protect,
+    apiFeatures.restrictTo('User'),
+    jobApplicationController.getRecommendedJobs
+  );
+router
   .route('/bookmark/:jobid')
   .post(apiFeatures.protect, jobApplicationController.bookmarkAJob);
 router

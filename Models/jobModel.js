@@ -47,7 +47,10 @@ const schema = new mongoose.Schema({
     type: String,
     default: 'unspecified',
   },
-  Skill_Requirement: String,
+  Skill_Requirement: {
+    type: Array,
+    default: [],
+  },
   Responsibilities: String,
   Experience_required: Number,
   Openings_available: {

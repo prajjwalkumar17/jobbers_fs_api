@@ -3,9 +3,8 @@ const router = express.Router();
 const userController = require('../Controller/userController');
 const apiFeatures = require('../Utils/apiFeatures');
 const jobApplicationController = require('./../Controller/jobApplicationController');
-const upload = require('multer')();
-// const upload = multer();
-router.use(upload.array());
+// const upload = require('multer')();
+// router.use(upload.any());
 router
   .route('/postings')
   .get(
