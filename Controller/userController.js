@@ -112,7 +112,13 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     return next(new AppError('This route is not for updating password', 400));
 
   //TODO create filter body
-  const filteredBody = filterOut(req.body, 'Name', 'Email');
+  const filteredBody = filterOut(
+    req.body,
+    'Name',
+    'Email',
+    'Skills',
+    'Current_designation'
+  );
   if (req.cv) filteredBody.Resume = req.cv.modifiedname;
   if (req.dp) filteredBody.Photo = req.dp.modifiedname;
   if (req.body.Skills) filteredBody.Skills = req.body.Skills;
