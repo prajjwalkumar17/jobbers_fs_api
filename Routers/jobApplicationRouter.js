@@ -7,7 +7,7 @@ const upload = require('multer')();
 router.use(upload.array());
 router
   .route('/')
-  .post(
+  .get(
     apiFeatures.protect,
     apiFeatures.restrictTo('User'),
     jobApplicationController.Jobapply

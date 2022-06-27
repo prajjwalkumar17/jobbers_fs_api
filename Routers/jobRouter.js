@@ -27,7 +27,7 @@ router
   );
 router
   .route('/bookmark/:jobid')
-  .post(apiFeatures.protect, jobApplicationController.bookmarkAJob);
+  .get(apiFeatures.protect, jobApplicationController.bookmarkAJob);
 router
   .route('/myBookmarks')
   .get(apiFeatures.protect, jobApplicationController.getMyBookmarkedJobs);
