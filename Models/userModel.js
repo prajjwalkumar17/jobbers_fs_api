@@ -33,6 +33,7 @@ const userSchema = new mongoose.Schema({
     enum: ['Recruiter', 'User', 'Admin'],
     required: [true, 'A person must be a Recruiter or a Job-seeker'],
   },
+  Current_Designation: String,
   Skills: {
     type: Array,
     default: [],
