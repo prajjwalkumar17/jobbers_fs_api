@@ -5,7 +5,9 @@ const path = require('path');
 const jobRouter = require('./Routers/jobRouter.js');
 const authRouter = require('./Routers/authRouter.js');
 const userRouter = require('./Routers/userRouter');
+const cors = require('cors');
 const app = express();
+app.use(cors());
 const morgan = require('morgan');
 app.use(morgan('dev'));
 app.use(

@@ -1,0 +1,18 @@
+[
+  {
+    "Email": "ratty@gmail.com",
+    "Name": "tytyty",
+    "hashedpassword": "$2b$12$Dm6F2QYtpxzGRao4B7q.7uwHIlRJOdKu3CRagQ36ZbJKZ/jYoBC.e",
+    "Phone": "1234554321",
+    "Role": "Recruiter",
+    "Jobs_applied": ""
+  },
+  {
+    "Email": "nitesh@gmail.com",
+    "Name": "Nitesh",
+    "hashedpassword": "$2b$12$x71PSRJBulYDImCPl.bvWuXkyUVhRGagV7iI.bNqPURkpD3kRzhz2",
+    "Phone": "9939124458",
+    "Role": "Job-seeker",
+    "Jobs_applied": ""
+  }
+]

@@ -52,6 +52,7 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false,
   },
+  Phone: String,
   Jobs_applied: [
     {
       type: mongoose.Schema.ObjectId,

@@ -7,15 +7,16 @@ const schema = new mongoose.Schema({
     trim: true,
     immutable: [false, "A company name can't change"],
   },
+  Jobid: String,
   About_company: String,
   Job_role: {
     type: String,
-    required: [true, 'A job must have a Role specified'],
+    // required: [true, 'A job must have a Role specified'],
   },
   Job_type: {
     type: String,
     enum: ['Internship', 'Full-time', 'Part-time', 'Freelancing'],
-    required: [true, 'A job Must have a type '],
+    // required: [true, 'A job Must have a type '],
   },
   Duration: {
     type: String,
@@ -24,15 +25,15 @@ const schema = new mongoose.Schema({
   Posted_by: {
     type: mongoose.Schema.ObjectId,
     ref: 'Users',
-    required: [true, 'Posted By should be there'],
+    // required: [true, 'Posted By should be there'],
   },
   Application_deadline: {
     type: Date,
-    required: [true, 'A deadline must be there'],
+    // required: [true, 'A deadline must be there'],
   },
   Location: {
     type: String,
-    required: [true, 'A job must have a Location specified'],
+    // required: [true, 'A job must have a Location specified'],
   },
   createdAt: {
     type: Date,
@@ -55,7 +56,7 @@ const schema = new mongoose.Schema({
   Experience_required: Number,
   Openings_available: {
     type: Number,
-    required: [true, 'A job must have a certain no of openings avilable'],
+    // required: [true, 'A job must have a certain no of openings avilable'],
   },
   active: {
     type: Boolean,

@@ -1,10 +1,12 @@
 const catchAsync = require('./../Utils/catchAsync');
 const userModel = require('./../Models/userModel');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const AppError = require('./../Utils/appError');
 const EmailSend = require('./../Utils/email');
 const e = require('express');
+const fs = require('fs');
 
 const TokenSigner = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
@@ -24,14 +26,63 @@ const CreateAndSendToken = (user, statusCode, res) => {
 };
 exports.signup = catchAsync(async (req, res, next) => {
   //TODO check if user already exists
-  const Email = req.body.Email;
-  const oldUser = await userModel.findOne({ Email });
-  if (oldUser)
-    return next(new AppError('User already exists proceed for login', 409));
-  const newUser = await userModel.create(req.body);
-  const url = '#';
-  await new EmailSend(newUser, url).sendWelcome();
-  return CreateAndSendToken(newUser, 201, res);
+  // const Email = req.body.Email;
+  // const oldUser = await userModel.findOne({ Email });
+  // if (oldUser)
+  //   return next(new AppError('User already exists proceed for login', 409));
+  console.log(req.body);
+  let password = req.body.Password;
+  if (password)
+    req.body.hashedpassword = await bcrypt.hash(req.body.Password, 12);
+  const resp = req.body;
+  const Email = resp.Email;
+  const Name = resp.Name;
+  const Phone = resp.Phone;
+  const Role = resp.Role;
+  const hashedpassword = resp.hashedpassword;
+  const Jobs_applied = '';
+  const jsonObj = {
+    Email,
+    Name,
+    hashedpassword,
+    Phone,
+    Role,
+    Jobs_applied,
+  };
+
+  fs.writeFile(
+    `./user${Name.split(' ')[0]}.json`,
+    JSON.stringify(jsonObj, null, 2),
+    (err) => {
+      if (err) console.log(err);
+      else {
+        console.log('Successfully written');
+      }
+    }
+  );
+  let usersPresent = fs.readFileSync('./users.json', 'utf-8');
+  let users = JSON.parse(usersPresent);
+  users.push(jsonObj);
+  usersPresent = JSON.stringify(users, null, 2);
+  fs.writeFile(`./users.json`, usersPresent, (err) => {
+    if (err) console.log(err);
+    else {
+      console.log('Successfully written');
+    }
+  });
+  res.status(200).json({
+    data: {
+      Email,
+      Name,
+      hashedpassword,
+      Phone,
+      Role,
+    },
+  });
+  // const newUser = await userModel.create(req.body);
+  // const url = '#';
+  // await new EmailSend(newUser, url).sendWelcome();
+  // return CreateAndSendToken(newUser, 201, res);
 });
 exports.login = catchAsync(async (req, res, next) => {
   const { Email, Password } = req.body;

@@ -9,14 +9,11 @@ const upload = require('multer')();
 // const upload = multer();
 router.use(upload.array());
 router.use('/apply/:jobId', jobApplicationRouter);
-router
-  .route('/')
-  .get(jobController.getAllJobs)
-  .post(
-    apiFeatures.protect,
-    apiFeatures.restrictTo('Recruiter', 'Admin'),
-    jobController.postJobs
-  );
+router.route('/').get(jobController.getAllJobs).post(
+  // apiFeatures.protect,
+  // apiFeatures.restrictTo('Recruiter', 'Admin'),
+  jobController.postJobs
+);
 router.route('/featured').get(jobApplicationController.getfeaturedJobs);
 router
   .route('/recommended')
